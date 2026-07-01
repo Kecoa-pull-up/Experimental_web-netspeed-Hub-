@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}NetSpeed Hub - Pelanggan{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-layout">
+        <div class="sidebar">
+            <div class="sidebar-brand"><i class="ti ti-bolt"></i> NetSpeed Hub</div>
+            <a href="{{ url_for('dashboard_pelanggan') }}" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+            <a href="{{ url_for('lapor_kendala') }}" class="nav-item">
+                <i class="ti ti-alert-triangle"></i> Lapor Kendala
+                {% if jumlah_notifikasi and jumlah_notifikasi > 0 %}
+                <span class="notif-badge">{{ jumlah_notifikasi }}</span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('logout') }}" class="nav-item nav-logout"><i class="ti ti-logout"></i> Logout</a>
+        </div>
+        <div class="main-content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>

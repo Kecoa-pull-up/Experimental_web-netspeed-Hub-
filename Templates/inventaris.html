@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Inventaris - NetSpeed Hub{% endblock %}
+{% block content %}
+    <a href="{{ url_for('dashboard') }}" class="back-link"><i class="ti ti-arrow-left"></i> Kembali ke Dashboard</a>
+    <h1>Manajemen Inventaris</h1>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Nama Barang</th>
+                <th>Kategori</th>
+                <th>Stok</th>
+                <th>Status</th>
+                <th>Ubah Stok</th>
+                <th>Riwayat</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for b in daftar_barang %}
+            <tr>
+                <td>{{ b.nama }}</td>
+                <td>{{ b.kategori }}</td>
+                <td>{{ b.stok }}</td>
+                <td>
+                    {% if b.stok == 0 %}
+                        <span class="badge badge-red">Habis</span>
+                    {% elif b.stok < b.stok_minimum %}
+                        <span class="badge badge-amber">Menipis</span>
+                    {% else %}
+                        <span class="badge badge-green">Aman</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <form method="POST" action="{{ url_for('ubah_stok', id=b.id) }}" class="stok-form">
+                        <input type="number" name="jumlah" min="1" value="1" required>
+                        <button type="submit" name="jenis" value="tambah" class="btn-stok btn-stok-tambah"><i class="ti ti-plus"></i></button>
+                        <button type="submit" name="jenis" value="kurang" class="btn-stok btn-stok-kurang"><i class="ti ti-minus"></i></button>
+                    </form>
+                </td>
+                <td>
+                    <a href="{{ url_for('riwayat_barang', id=b.id) }}" class="action-edit"><i class="ti ti-history"></i> Lihat</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

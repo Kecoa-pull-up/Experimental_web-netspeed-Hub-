@@ -1,0 +1,38 @@
+{% extends "base_teknisi.html" if session.role == "teknisi" else "base.html" %}
+{% block title %}Tiket Kendala - NetSpeed Hub{% endblock %}
+{% block content %}
+    <a href="{{ url_for('dashboard_teknisi') if session.role == 'teknisi' else url_for('dashboard') }}" class="back-link"><i class="ti ti-arrow-left"></i> Kembali ke Dashboard</a>
+    <h1>Tiket Kendala Pelanggan</h1>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Pelanggan</th>
+                <th>Deskripsi</th>
+                <th>Tanggal Lapor</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in daftar_tiket %}
+            <tr>
+                <td>{{ t.nama }}</td>
+                <td>{{ t.deskripsi }}</td>
+                <td>{{ t.tanggal_lapor }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('update_status_tiket', id=t.id) }}" style="display:flex; align-items:center; gap:8px;">
+                        <select name="status" onchange="this.form.submit()" style="padding:6px 10px; border-radius:8px; border:1px solid rgba(150,150,200,0.3); font-size:13px;">
+                            <option value="Dilaporkan" {% if t.status == "Dilaporkan" %}selected{% endif %}>Dilaporkan</option>
+                            <option value="Sedang Ditangani" {% if t.status == "Sedang Ditangani" %}selected{% endif %}>Sedang Ditangani</option>
+                            <option value="Selesai" {% if t.status == "Selesai" %}selected{% endif %}>Selesai</option>
+                        </select>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            {% if daftar_tiket|length == 0 %}
+            <tr><td colspan="4" style="text-align:center; color:#6b6b85;">Belum ada laporan kendala.</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock %}

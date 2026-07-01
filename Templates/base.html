@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}NetSpeed Hub{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <div class="sidebar">
+            <div class="sidebar-brand"><i class="ti ti-bolt"></i> NetSpeed Hub</div>
+            <a href="{{ url_for('dashboard') }}" class="nav-item"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+            <a href="{{ url_for('pelanggan') }}" class="nav-item"><i class="ti ti-users"></i> Pelanggan</a>
+            <a href="{{ url_for('jaringan') }}" class="nav-item"><i class="ti ti-wifi"></i> Jaringan</a>
+            <a href="{{ url_for('tiket') }}" class="nav-item">
+                <i class="ti ti-ticket"></i> Tiket Kendala
+                {% if jumlah_notifikasi and jumlah_notifikasi > 0 %}
+                <span class="notif-badge">{{ jumlah_notifikasi }}</span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('tagihan') }}" class="nav-item"><i class="ti ti-credit-card"></i> Tagihan</a>
+            <a href="{{ url_for('inventaris') }}" class="nav-item"><i class="ti ti-package"></i> Inventaris</a>
+            <a href="{{ url_for('teknisi') }}" class="nav-item"><i class="ti ti-tools"></i> Teknisi</a>
+            <a href="{{ url_for('laporan') }}" class="nav-item"><i class="ti ti-chart-bar"></i> Laporan</a>
+            <a href="{{ url_for('logout') }}" class="nav-item nav-logout"><i class="ti ti-logout"></i> Logout</a>
+        </div>
+        <div class="main-content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>

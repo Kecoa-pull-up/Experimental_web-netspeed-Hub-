@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - NetSpeed Hub{% endblock %}
+{% block content %}
+    <h1>Selamat datang, {{ username }}</h1>
+
+    <div class="stat-grid">
+        <div class="stat-card">
+            <p class="stat-label">Total Pelanggan</p>
+            <p class="stat-value">{{ total_pelanggan }}</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Pelanggan Aktif</p>
+            <p class="stat-value">{{ pelanggan_aktif }}</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Tagihan Belum Bayar</p>
+            <p class="stat-value">{{ tagihan_pending }}</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Pendapatan Bulan Ini</p>
+            <p class="stat-value">Rp {{ "{:,}".format(pendapatan_bulan_ini) }}</p>
+        </div>
+    </div>
+
+    <div class="content-row">
+        <div class="chart-card">
+            <p class="card-title">Distribusi Paket Pelanggan</p>
+            <canvas id="grafikPaket"></canvas>
+        </div>
+
+        <div class="activity-card">
+            <p class="card-title">Aktivitas Terkini</p>
+            {% for a in aktivitas_terkini %}
+            <div class="activity-item">
+                <span>{{ a.nama }} — paket {{ a.paket }}</span>
+                {% if a.status == "Aktif" %}
+                    <span class="badge badge-green">Aktif</span>
+                {% else %}
+                    <span class="badge badge-red">Nonaktif</span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('grafikPaket');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['10 Mbps', '20 Mbps', '50 Mbps', '100 Mbps'],
+                datasets: [{
+                    label: 'Jumlah Pelanggan',
+                    data: [
+                        {{ paket_count[0] }},
+                        {{ paket_count[1] }},
+                        {{ paket_count[2] }},
+                        {{ paket_count[3] }}
+                    ],
+                    backgroundColor: [
+                        '#a8c8f0',
+                        '#7aa8e0',
+                        '#4a7fc9',
+                        '#2a55a8'
+                    ],
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            }
+        });
+    </script>
+{% endblock %}

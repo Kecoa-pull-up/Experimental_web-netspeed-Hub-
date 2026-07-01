@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Daftar Akun - NetSpeed Hub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-page">
+    <div class="login-container" style="width:600px;">
+        <div class="login-brand">
+            <i class="ti ti-user-plus"></i>
+            <h1>NetSpeed Hub</h1>
+            <p>Daftar Akun Pelanggan</p>
+        </div>
+        <div class="login-form">
+            <h2>Buat Akun Baru</h2>
+            {% if error %}
+                <p style="color:#b8305a; font-size:14px; margin-bottom:15px;">{{ error }}</p>
+            {% endif %}
+            <form method="POST">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" name="nama" required>
+
+                <label for="no_hp">No. HP</label>
+                <input type="text" id="no_hp" name="no_hp" required>
+
+                <label for="paket">Pilih Paket</label>
+                <select id="paket" name="paket" required>
+                    <option value="10 Mbps">10 Mbps</option>
+                    <option value="20 Mbps">20 Mbps</option>
+                    <option value="50 Mbps">50 Mbps</option>
+                    <option value="100 Mbps">100 Mbps</option>
+                </select>
+
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+
+                <button type="submit">Daftar Sekarang</button>
+            </form>
+            <p style="text-align:center; margin-top:15px; font-size:13px; color:#6b6b85;">
+                Sudah punya akun? <a href="{{ url_for('login') }}" style="color:#3b6fd6;">Login di sini</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - NetSpeed Hub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="login-page">
+    <div class="login-container">
+        <div class="login-brand">
+            <i class="ti ti-wifi"></i>
+            <h1>NetSpeed Hub</h1>
+            <p>Sistem Informasi ISP</p>
+        </div>
+        <div class="login-form">
+            <h2>Masuk ke Sistem</h2>
+            {% if error %}
+                <p style="color: #a32d2d; font-size: 14px; margin-bottom: 15px;">{{ error }}</p>
+            {% endif %}
+            <form method="POST" action="/login">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="admin@netspeed.local">
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="••••••••">
+
+                <button type="submit">Login</button>
+                <p style="text-align:center; margin-top:15px; font-size:13px; color:#6b6b85;">
+                    Pelanggan baru? <a href="{{ url_for('daftar_pelanggan_mandiri') }}" style="color:#3b6fd6;">Daftar di sini</a>
+                </p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Buat Tagihan - NetSpeed Hub{% endblock %}
+{% block content %}
+    <a href="{{ url_for('tagihan') }}" class="back-link"><i class="ti ti-arrow-left"></i> Kembali ke Tagihan</a>
+    <h1>Buat Tagihan Baru</h1>
+
+    <form method="POST" class="form-box">
+        <label for="pelanggan_id">Pelanggan</label>
+        <select id="pelanggan_id" name="pelanggan_id" required>
+            {% for p in daftar_pelanggan %}
+            <option value="{{ p.id }}">{{ p.nama }} — {{ p.paket }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="jumlah">Jumlah (Rp)</label>
+        <input type="number" id="jumlah" name="jumlah" placeholder="Contoh: 150000" required>
+
+        <label for="jatuh_tempo">Jatuh Tempo</label>
+        <input type="date" id="jatuh_tempo" name="jatuh_tempo" required>
+
+        <button type="submit"><i class="ti ti-check"></i> Simpan Tagihan</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base_pelanggan.html" %}
+{% block title %}Dashboard Pelanggan - NetSpeed Hub{% endblock %}
+{% block content %}
+    <h1>Selamat datang, {{ data_diri.nama }}</h1>
+
+    <div class="stat-grid">
+        <div class="stat-card">
+            <p class="stat-label">Paket Aktif</p>
+            <p class="stat-value" style="font-size:20px;">{{ data_diri.paket }}</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Status Layanan</p>
+            <p class="stat-value" style="font-size:20px;">{{ data_diri.status }}</p>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <p class="card-title">Riwayat Tagihan Saya</p>
+        <table class="data-table">
+            <thead>
+                <tr><th>Jumlah</th><th>Jatuh Tempo</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                {% for t in daftar_tagihan_saya %}
+                <tr>
+                    <td>Rp {{ "{:,}".format(t.jumlah) }}</td>
+                    <td>{{ t.jatuh_tempo }}</td>
+                    <td>
+                        {% if t.status_bayar == "Lunas" %}
+                            <span class="badge badge-green">Lunas</span>
+                        {% else %}
+                            <span class="badge badge-red">Belum Bayar</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                {% if daftar_tagihan_saya|length == 0 %}
+                <tr><td colspan="3" style="text-align:center; color:#6b6b85;">Belum ada tagihan.</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

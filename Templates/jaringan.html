@@ -1,0 +1,124 @@
+{% extends "base_teknisi.html" if session.role == "teknisi" else "base.html" %}
+{% block title %}Monitoring Jaringan - NetSpeed Hub{% endblock %}
+{% block content %}
+    <a href="{{ url_for('dashboard') }}" class="back-link"><i class="ti ti-arrow-left"></i> Kembali ke Dashboard</a>
+    <h1>Monitoring Jaringan</h1>
+
+    <div class="stat-grid">
+        <div class="stat-card">
+            <p class="stat-label">Total Titik</p>
+            <p class="stat-value">{{ titik_json | length }}</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Terpasang</p>
+            <p class="stat-value">{{ titik_json | selectattr("status", "equalto", "Terpasang") | list | length }}</p>
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Gangguan/Rusak</p>
+            <p class="stat-value">{{ titik_json | selectattr("status", "equalto", "Rusak") | list | length }}</p>
+        </div>
+    </div>
+
+    <div class="chart-card" style="margin-bottom: 25px;">
+        <p class="card-title">Peta Titik Jaringan</p>
+        <div id="peta" style="height: 420px; border-radius: 8px;"></div>
+        <div style="display:flex; gap:18px; margin-top:12px; font-size:12px; color:#5f5e5a;">
+            <span><span class="dot-legenda" style="background:#0f6e56;"></span> Terpasang</span>
+            <span><span class="dot-legenda" style="background:#a32d2d;"></span> Rusak</span>
+            <span><span class="dot-legenda" style="background:#185fa5;"></span> Area Aktif</span>
+        </div>
+    </div>
+
+    <div class="page-header">
+        <p class="card-title" style="margin-bottom:0;">Tambah Titik Lokasi Baru</p>
+    </div>
+    <form method="POST" action="{{ url_for('tambah_titik') }}" class="form-box" style="margin-bottom:25px;">
+        <label for="nama_lokasi">Nama Lokasi</label>
+        <input type="text" id="nama_lokasi" name="nama_lokasi" placeholder="Contoh: ODP Jalan Baru" required>
+
+        <label for="latitude">Latitude</label>
+        <input type="text" id="latitude" name="latitude" placeholder="Klik pada peta di atas untuk melihat contoh koordinat" required>
+
+        <label for="longitude">Longitude</label>
+        <input type="text" id="longitude" name="longitude" placeholder="Contoh: 97.1500" required>
+
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+            <option value="Terpasang">Terpasang</option>
+            <option value="Rusak">Rusak</option>
+            <option value="Area Aktif">Area Aktif</option>
+        </select>
+
+        <label for="keterangan">Keterangan</label>
+        <input type="text" id="keterangan" name="keterangan" placeholder="Catatan tambahan (opsional)">
+
+        <button type="submit"><i class="ti ti-map-pin-plus"></i> Tambah Titik</button>
+    </form>
+
+    <table class="data-table">
+        <thead>
+            <tr><th>Nama Lokasi</th><th>Status</th><th>Tanggal Input</th><th>Aksi</th></tr>
+        </thead>
+        <tbody>
+            {% for t in titik_json %}
+            <tr>
+                <td>{{ t.nama_lokasi }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('update_status_titik', id=t.id) }}">
+                        <select name="status" onchange="this.form.submit()" class="status-select status-select-{{ 'green' if t.status == 'Terpasang' else 'red' if t.status == 'Rusak' else 'blue' }}">
+                            <option value="Terpasang" {% if t.status == "Terpasang" %}selected{% endif %}>Terpasang</option>
+                            <option value="Rusak" {% if t.status == "Rusak" %}selected{% endif %}>Rusak</option>
+                            <option value="Area Aktif" {% if t.status == "Area Aktif" %}selected{% endif %}>Area Aktif</option>
+                        </select>
+                    </form>
+                </td>
+                <td>{{ t.tanggal_input }}</td>
+                <td>
+                    {% if session.role == "admin" %}
+                    <a href="{{ url_for('hapus_titik', id=t.id) }}" class="action-delete" onclick="return confirm('Yakin ingin menghapus titik ini?')"><i class="ti ti-trash"></i></a>
+                    {% else %}
+                    —
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        const dataTitik = {{ titik_json | tojson }};
+
+        const peta = L.map('peta').setView([5.1801, 97.1507], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(peta);
+
+        const warnaStatus = {
+            "Terpasang": "#0f6e56",
+            "Rusak": "#a32d2d",
+            "Area Aktif": "#185fa5"
+        };
+
+        dataTitik.forEach(titik => {
+            const warna = warnaStatus[titik.status] || "#5f5e5a";
+            const marker = L.circleMarker([titik.latitude, titik.longitude], {
+                radius: 10,
+                fillColor: warna,
+                color: "#ffffff",
+                weight: 2,
+                fillOpacity: 0.9
+            }).addTo(peta);
+
+            marker.bindPopup(`
+                <strong>${titik.nama_lokasi}</strong><br>
+                Status: ${titik.status}<br>
+                ${titik.keterangan || ''}
+            `);
+        });
+
+        peta.on('click', function(e) {
+            document.getElementById('latitude').value = e.latlng.lat.toFixed(6);
+            document.getElementById('longitude').value = e.latlng.lng.toFixed(6);
+        });
+    </script>
+{% endblock %}

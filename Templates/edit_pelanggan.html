@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Edit Pelanggan - NetSpeed Hub{% endblock %}
+{% block content %}
+    <a href="{{ url_for('pelanggan') }}" class="back-link"><i class="ti ti-arrow-left"></i> Kembali ke Data Pelanggan</a>
+    <h1>Edit Data Pelanggan</h1>
+
+    <form method="POST" class="form-box">
+        <label for="nama">Nama</label>
+        <input type="text" id="nama" name="nama" value="{{ p.nama }}" required>
+
+        <label for="no_hp">No. HP</label>
+        <input type="text" id="no_hp" name="no_hp" value="{{ p.no_hp }}" required>
+
+        <label for="paket">Paket</label>
+        <select id="paket" name="paket" required>
+            <option value="10 Mbps" {% if p.paket == "10 Mbps" %}selected{% endif %}>10 Mbps</option>
+            <option value="20 Mbps" {% if p.paket == "20 Mbps" %}selected{% endif %}>20 Mbps</option>
+            <option value="50 Mbps" {% if p.paket == "50 Mbps" %}selected{% endif %}>50 Mbps</option>
+            <option value="100 Mbps" {% if p.paket == "100 Mbps" %}selected{% endif %}>100 Mbps</option>
+        </select>
+
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+            <option value="Aktif" {% if p.status == "Aktif" %}selected{% endif %}>Aktif</option>
+            <option value="Nonaktif" {% if p.status == "Nonaktif" %}selected{% endif %}>Nonaktif</option>
+        </select>
+
+        <button type="submit"><i class="ti ti-check"></i> Simpan Perubahan</button>
+    </form>
+{% endblock %}  

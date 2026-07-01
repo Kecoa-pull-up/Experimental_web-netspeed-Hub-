@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Bayar Tagihan - NetSpeed Hub{% endblock %}
+{% block content %}
+    <a href="{{ url_for('tagihan') }}" class="back-link"><i class="ti ti-arrow-left"></i> Kembali ke Tagihan</a>
+    <h1>Konfirmasi Pembayaran</h1>
+
+    <div class="chart-card" style="max-width: 420px; margin-bottom: 20px;">
+        <p style="font-size:13px; color:#5f5e5a;">Pelanggan</p>
+        <p style="font-size:16px; font-weight:bold; color:#1a1a1a; margin-bottom:10px;">{{ t.nama }}</p>
+        <p style="font-size:13px; color:#5f5e5a;">Jumlah Tagihan</p>
+        <p style="font-size:20px; font-weight:bold; color:#0f6e56;">Rp {{ "{:,}".format(t.jumlah) }}</p>
+    </div>
+
+    <form method="POST" class="form-box">
+        <label for="metode_bayar">Metode Pembayaran</label>
+        <select id="metode_bayar" name="metode_bayar" required>
+            <option value="Transfer Bank">Transfer Bank</option>
+            <option value="QRIS">QRIS</option>
+            <option value="Tunai">Tunai</option>
+        </select>
+
+        <button type="submit"><i class="ti ti-check"></i> Konfirmasi Lunas</button>
+    </form>
+{% endblock %}

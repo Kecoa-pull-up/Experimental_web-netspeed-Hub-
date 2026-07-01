@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Data Pelanggan - NetSpeed Hub{% endblock %}
+{% block content %}
+    <a href="{{ url_for('dashboard') }}" class="back-link"><i class="ti ti-arrow-left"></i> Kembali ke Dashboard</a>
+
+    <div class="page-header">
+        <h1>Data Pelanggan</h1>
+        <a href="{{ url_for('tambah_pelanggan') }}" class="btn-primary"><i class="ti ti-plus"></i> Tambah Pelanggan</a>
+    </div>
+
+    <form method="GET" action="{{ url_for('pelanggan') }}" class="search-bar">
+        <input type="hidden" name="filter" value="{{ filter_status }}">
+        <i class="ti ti-search"></i>
+        <input type="text" name="cari" value="{{ kata_cari }}" placeholder="Cari pelanggan...">
+    </form>
+
+    <div class="filter-tabs">
+        <a href="{{ url_for('pelanggan', filter='semua', cari=kata_cari) }}"
+           class="filter-tab {% if filter_status == 'semua' %}active{% endif %}">
+            Semua ({{ jumlah_semua }})
+        </a>
+        <a href="{{ url_for('pelanggan', filter='aktif', cari=kata_cari) }}"
+           class="filter-tab {% if filter_status == 'aktif' %}active{% endif %}">
+            Aktif ({{ jumlah_aktif }})
+        </a>
+        <a href="{{ url_for('pelanggan', filter='nonaktif', cari=kata_cari) }}"
+           class="filter-tab {% if filter_status == 'nonaktif' %}active{% endif %}">
+            Nonaktif ({{ jumlah_nonaktif }})
+        </a>
+    </div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>No. HP</th>
+                <th>Paket</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in daftar_pelanggan %}
+            <tr>
+                <td>{{ p.nama }}</td>
+                <td>{{ p.no_hp }}</td>
+                <td>{{ p.paket }}</td>
+                <td>
+                    {% if p.status == "Aktif" %}
+                        <span class="badge badge-green">Aktif</span>
+                    {% else %}
+                        <span class="badge badge-red">Nonaktif</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('edit_pelanggan', id=p.id) }}" class="action-edit"><i class="ti ti-edit"></i></a>
+                    <a href="{{ url_for('hapus_pelanggan', id=p.id) }}" class="action-delete" onclick="return confirm('Yakin ingin menghapus data ini?')"><i class="ti ti-trash"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

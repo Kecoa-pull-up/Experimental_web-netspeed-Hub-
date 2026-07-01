@@ -1,0 +1,13 @@
+{% extends "base_pelanggan.html" %}
+{% block title %}Lapor Kendala - NetSpeed Hub{% endblock %}
+{% block content %}
+    <h1>Lapor Kendala Jaringan</h1>
+
+    <form method="POST" class="form-box">
+        <label for="deskripsi">Jelaskan kendala yang dialami</label>
+        <textarea id="deskripsi" name="deskripsi" rows="5" required
+            style="padding:10px; border:1px solid rgba(150,150,200,0.3); border-radius:10px; font-size:14px; background:rgba(255,255,255,0.6); font-family:Arial, sans-serif;"></textarea>
+
+        <button type="submit"><i class="ti ti-send"></i> Kirim Laporan</button>
+    </form>
+{% endblock %}

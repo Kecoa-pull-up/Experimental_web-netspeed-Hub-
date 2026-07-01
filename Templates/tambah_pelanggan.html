@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Tambah Pelanggan - NetSpeed Hub{% endblock %}
+{% block content %}
+    <a href="{{ url_for('pelanggan') }}" class="back-link"><i class="ti ti-arrow-left"></i> Kembali ke Data Pelanggan</a>
+    <h1>Tambah Pelanggan Baru</h1>
+
+    <form method="POST" class="form-box">
+        <label for="nama">Nama</label>
+        <input type="text" id="nama" name="nama" placeholder="Contoh: Budi Santoso" required>
+
+        <label for="no_hp">No. HP</label>
+        <input type="text" id="no_hp" name="no_hp" placeholder="Contoh: 0812-3456-7890" required>
+
+        <label for="paket">Paket</label>
+        <select id="paket" name="paket" required>
+            <option value="10 Mbps">10 Mbps</option>
+            <option value="20 Mbps">20 Mbps</option>
+            <option value="50 Mbps">50 Mbps</option>
+            <option value="100 Mbps">100 Mbps</option>
+        </select>
+
+        <label for="status">Status</label>
+        <select id="status" name="status" required>
+            <option value="Aktif">Aktif</option>
+            <option value="Nonaktif">Nonaktif</option>
+        </select>
+
+        <button type="submit"><i class="ti ti-check"></i> Simpan Pelanggan</button>
+    </form>
+{% endblock %}

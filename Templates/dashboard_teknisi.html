@@ -1,0 +1,98 @@
+{% extends "base_teknisi.html" %}
+{% block title %}Dashboard Teknisi - NetSpeed Hub{% endblock %}
+{% block content %}
+    <h1>Selamat datang, {{ nama_lengkap }}</h1>
+
+    <div class="stat-grid">
+        <div class="chart-card" style="flex:1;">
+            <p class="card-label" style="font-size:13px; color:#6b6b85; margin-bottom:10px;">Absensi hari ini ({{ hari_ini }})</p>
+            {% if sudah_absen %}
+                <span class="badge badge-green" style="font-size:14px; padding:8px 16px;"><i class="ti ti-check"></i> Hadir Hari Ini</span>
+            {% else %}
+                <span class="badge badge-red" style="font-size:14px; padding:8px 16px;"><i class="ti ti-clock"></i> Belum Diabsen Admin</span>
+            {% endif %}
+        </div>
+        <div class="stat-card">
+            <p class="stat-label">Titik Jaringan Bermasalah</p>
+            <p class="stat-value">{{ jumlah_gangguan }}</p>
+        </div>
+    </div>
+
+    <div class="content-row" style="align-items:flex-start;">
+    <div class="chart-card" style="max-width:420px;">
+        <p class="card-title">Kalender Absensi Saya</p>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <button onclick="ubahBulan(-1)" class="btn-stok btn-stok-kurang"><i class="ti ti-chevron-left"></i></button>
+            <span id="judul-bulan" style="font-size:14px; font-weight:bold; color:#1a1a2e;"></span>
+            <button onclick="ubahBulan(1)" class="btn-stok btn-stok-tambah"><i class="ti ti-chevron-right"></i></button>
+        </div>
+        <div id="grid-kalender" style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px; text-align:center; font-size:12px;"></div>
+        <div style="display:flex; gap:14px; margin-top:14px; font-size:12px; color:#6b6b85;">
+            <span><span class="dot-legenda" style="background:#3b6fd6;"></span> Hadir</span>
+            <span><span class="dot-legenda" style="background:#d6486f;"></span> Tidak Hadir</span>
+            <span><span class="dot-legenda" style="background:#e0e0ee;"></span> Belum Diabsen</span>
+        </div>
+    </div>
+
+    <div class="activity-card">
+        <p class="card-title">Notifikasi Tiket Kendala</p>
+        {% if jumlah_notifikasi and jumlah_notifikasi > 0 %}
+            <div style="display:flex; align-items:center; gap:14px; margin-bottom:14px;">
+                <span style="font-size:32px; font-weight:bold; color:#d6486f;">{{ jumlah_notifikasi }}</span>
+                <span style="font-size:13px; color:#5b5b7a;">tiket belum ditangani</span>
+            </div>
+            <a href="{{ url_for('tiket') }}" class="btn-primary" style="margin-bottom:0;"><i class="ti ti-ticket"></i> Lihat Semua Tiket</a>
+        {% else %}
+            <div style="display:flex; align-items:center; gap:10px; color:#1e8c5f;">
+                <i class="ti ti-circle-check" style="font-size:24px;"></i>
+                <span style="font-size:14px;">Tidak ada tiket yang menunggu saat ini.</span>
+            </div>
+        {% endif %}
+    </div>
+    </div>
+
+    <script>
+        const riwayatAbsen = {{ riwayat_absen_json | tojson }};
+        let tampilTanggal = new Date();
+
+        const namaBulan = ["Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
+        const namaHari = ["Min","Sen","Sel","Rab","Kam","Jum","Sab"];
+
+        function ubahBulan(arah) {
+            tampilTanggal.setMonth(tampilTanggal.getMonth() + arah);
+            gambarKalender();
+        }
+
+        function gambarKalender() {
+            const tahun = tampilTanggal.getFullYear();
+            const bulan = tampilTanggal.getMonth();
+
+            document.getElementById('judul-bulan').textContent = `${namaBulan[bulan]} ${tahun}`;
+
+            const hariPertama = new Date(tahun, bulan, 1).getDay();
+            const jumlahHari = new Date(tahun, bulan + 1, 0).getDate();
+
+            let html = namaHari.map(h => `<div style="font-weight:bold; color:#6b6b85; padding:4px 0;">${h}</div>`).join('');
+
+            for (let i = 0; i < hariPertama; i++) {
+                html += `<div></div>`;
+            }
+
+            for (let tgl = 1; tgl <= jumlahHari; tgl++) {
+                const tanggalLengkap = `${tahun}-${String(bulan+1).padStart(2,'0')}-${String(tgl).padStart(2,'0')}`;
+                const statusHadir = riwayatAbsen[tanggalLengkap];
+
+                let warnaBg = '#e0e0ee';
+                let warnaTeks = '#6b6b85';
+                if (statusHadir === 1) { warnaBg = '#3b6fd6'; warnaTeks = 'white'; }
+                else if (statusHadir === 0) { warnaBg = '#d6486f'; warnaTeks = 'white'; }
+
+                html += `<div style="background:${warnaBg}; color:${warnaTeks}; padding:6px 0; border-radius:8px;">${tgl}</div>`;
+            }
+
+            document.getElementById('grid-kalender').innerHTML = html;
+        }
+
+        gambarKalender();
+    </script>
+{% endblock %}

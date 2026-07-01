@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Teknisi - NetSpeed Hub{% endblock %}
+{% block content %}
+    <a href="{{ url_for('dashboard') }}" class="back-link"><i class="ti ti-arrow-left"></i> Kembali ke Dashboard</a>
+
+    <div class="page-header">
+        <h1>Manajemen Teknisi</h1>
+        <a href="{{ url_for('tambah_teknisi') }}" class="btn-primary"><i class="ti ti-plus"></i> Tambah Teknisi</a>
+    </div>
+
+    <p style="font-size:13px; color:#5f5e5a; margin-bottom:15px;">
+        Absensi untuk tanggal: <strong>{{ hari_ini }}</strong>
+    </p>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>Spesialisasi</th>
+                <th>No. HP</th>
+                <th>Absensi Hari Ini</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in daftar_teknisi %}
+            <tr>
+                <td>{{ t.nama }}</td>
+                <td>{{ t.spesialisasi }}</td>
+                <td>{{ t.no_hp }}</td>
+                <td>
+                    <a href="{{ url_for('toggle_absen', id=t.id) }}" class="checklist-item">
+                        {% if status_absensi.get(t.id) == 1 %}
+                            <i class="ti ti-square-rounded-check checklist-checked"></i>
+                            <span class="badge badge-green">Hadir</span>
+                        {% else %}
+                            <i class="ti ti-square checklist-unchecked"></i>
+                            <span class="badge badge-red">Belum Absen</span>
+                        {% endif %}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ url_for('hapus_teknisi', id=t.id) }}" class="action-delete" onclick="return confirm('Yakin ingin menghapus teknisi ini?')"><i class="ti ti-trash"></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

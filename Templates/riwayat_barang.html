@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Riwayat - NetSpeed Hub{% endblock %}
+{% block content %}
+    <a href="{{ url_for('inventaris') }}" class="back-link"><i class="ti ti-arrow-left"></i> Kembali ke Inventaris</a>
+    <h1>Riwayat: {{ barang.nama }}</h1>
+
+    <p style="font-size:13px; color:#5f5e5a; margin-bottom:20px;">
+        Stok saat ini: <strong>{{ barang.stok }}</strong> unit
+    </p>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Jenis Perubahan</th>
+                <th>Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in daftar_riwayat %}
+            <tr>
+                <td>{{ r.tanggal }}</td>
+                <td>
+                    {% if r.jenis_perubahan == "Tambah" %}
+                        <span class="badge badge-green">+ Tambah</span>
+                    {% else %}
+                        <span class="badge badge-red">- Kurang</span>
+                    {% endif %}
+                </td>
+                <td>{{ r.jumlah }} unit</td>
+            </tr>
+            {% endfor %}
+            {% if daftar_riwayat|length == 0 %}
+            <tr><td colspan="3" style="text-align:center; color:#5f5e5a;">Belum ada riwayat perubahan stok.</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock %}

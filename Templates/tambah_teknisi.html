@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Tambah Teknisi - NetSpeed Hub{% endblock %}
+{% block content %}
+    <a href="{{ url_for('teknisi') }}" class="back-link"><i class="ti ti-arrow-left"></i> Kembali ke Teknisi</a>
+    <h1>Tambah Teknisi Baru</h1>
+
+    <form method="POST" class="form-box">
+        <label for="nama">Nama</label>
+        <input type="text" id="nama" name="nama" placeholder="Contoh: Hendra Gunawan" required>
+
+        <label for="spesialisasi">Spesialisasi</label>
+        <select id="spesialisasi" name="spesialisasi" required>
+            <option value="Instalasi">Instalasi</option>
+            <option value="Perbaikan">Perbaikan</option>
+            <option value="Jaringan">Jaringan</option>
+        </select>
+
+        <label for="no_hp">No. HP</label>
+        <input type="text" id="no_hp" name="no_hp" placeholder="Contoh: 0811-4444-4444" required>
+
+        <button type="submit"><i class="ti ti-check"></i> Simpan Teknisi</button>
+    </form>
+{% endblock %}

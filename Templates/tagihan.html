@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Tagihan - NetSpeed Hub{% endblock %}
+{% block content %}
+    <a href="{{ url_for('dashboard') }}" class="back-link"><i class="ti ti-arrow-left"></i> Kembali ke Dashboard</a>
+
+    <div class="page-header">
+        <h1>Tagihan &amp; Pembayaran</h1>
+        <a href="{{ url_for('tambah_tagihan') }}" class="btn-primary"><i class="ti ti-plus"></i> Buat Tagihan</a>
+    </div>
+
+    <form method="GET" action="{{ url_for('tagihan') }}" class="search-bar">
+        <input type="hidden" name="filter" value="{{ filter_status }}">
+        <i class="ti ti-search"></i>
+        <input type="text" name="cari" value="{{ kata_cari }}" placeholder="Cari nama pelanggan...">
+    </form>
+
+    <div class="filter-tabs">
+        <a href="{{ url_for('tagihan', filter='semua', cari=kata_cari) }}"
+           class="filter-tab {% if filter_status == 'semua' %}active{% endif %}">
+            Semua ({{ jumlah_semua }})
+        </a>
+        <a href="{{ url_for('tagihan', filter='lunas', cari=kata_cari) }}"
+           class="filter-tab {% if filter_status == 'lunas' %}active{% endif %}">
+            Lunas ({{ jumlah_lunas }})
+        </a>
+        <a href="{{ url_for('tagihan', filter='belum_bayar', cari=kata_cari) }}"
+           class="filter-tab {% if filter_status == 'belum_bayar' %}active{% endif %}">
+            Belum Bayar ({{ jumlah_belum_bayar }})
+        </a>
+    </div>
+
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Pelanggan</th>
+                <th>Jumlah</th>
+                <th>Jatuh Tempo</th>
+                <th>Status</th>
+                <th>Metode Bayar</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for t in daftar_tagihan %}
+            <tr>
+                <td>{{ t.nama }}</td>
+                <td>Rp {{ "{:,}".format(t.jumlah) }}</td>
+                <td>{{ t.jatuh_tempo }}</td>
+                <td>
+                    {% if t.status_bayar == "Lunas" %}
+                        <span class="badge badge-green">Lunas</span>
+                    {% else %}
+                        <span class="badge badge-red">Belum Bayar</span>
+                    {% endif %}
+                </td>
+                <td>{{ t.metode_bayar if t.metode_bayar else "—" }}</td>
+                <td>
+                    {% if t.status_bayar != "Lunas" %}
+                    <a href="{{ url_for('bayar_tagihan', id=t.id) }}" class="action-edit"><i class="ti ti-credit-card"></i> Bayar</a>
+                    {% else %}
+                    —
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
